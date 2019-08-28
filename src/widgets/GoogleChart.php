@@ -6,15 +6,30 @@ use codexten\yii\web\Widget;
 
 class GoogleChart extends Widget
 {
-    public $dataBinding;
+    public $dataBindingPrefix;
 
     public $type;
     public $data;
     public $chartOptions;
     public $settings;
 
-    public function run()
+    /**
+     * @inheritDoc
+     */
+    public function init()
     {
-        return $this->render('default');
+        if ($this->dataBindingPrefix) {
+            $this->type = $this->getDataBindVariable('type');
+            $this->data = $this->getDataBindVariable('chartData');
+            $this->chartOptions = $this->getDataBindVariable('chartOptions');
+            $this->settings = $this->getDataBindVariable('settings');
+        }
+
+        parent::init();
+    }
+
+    protected function getDataBindVariable($variable)
+    {
+        return "{$this->dataBindingPrefix}.{$variable}";
     }
 }
